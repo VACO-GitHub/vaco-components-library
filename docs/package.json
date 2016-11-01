@@ -12,7 +12,7 @@
     "babel-standalone": "6.7.7",
     "classnames": "2.2.5",
     "codemirror": "5.14.2",
-    "history": "4.3.0",
+    "history": "3.0.0",
     "react": "15.3.2",
     "react-css-themr": "1.4.1",
     "react-dom": "15.3.2",

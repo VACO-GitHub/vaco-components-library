@@ -20,7 +20,8 @@ module.exports = {
     extensions: ['', '.scss', '.js', '.json', 'React', '.md'],
     packageMains: ['browser', 'web', 'browserify', 'main', 'style'],
     alias: {
-      'react-toolbox': path.resolve(__dirname + './../components')
+      'react-toolbox': path.resolve(__dirname + './../components'),
+      'vaco-components-library': path.resolve(__dirname + './../components')
     },
     modulesDirectories: [
       'node_modules',
