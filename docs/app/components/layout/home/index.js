@@ -22,8 +22,9 @@ const Home = () => (
   <article>
     <header className={style.header}>
       <Logo className={style.logo} />
-      <h2 className={style.title}>React Toolbox</h2>
-      <h4 className={style.subtitle}>Bootstrap your application with beautiful Material Design Components</h4>
+      <h2 className={style.title}>V. Alexander's</h2>
+      <h2 className={style.title}>React Components</h2>
+      <h4 className={style.subtitle}>Bootstrap your application with beautiful Material Design Components based on React Toolbox.</h4>
       <Navigation className={style.navigation} />
     </header>
 
