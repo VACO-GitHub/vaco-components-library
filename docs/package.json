@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Documentation for V. Alexander's Implementation of React Toolbox Components",
   "author": "V. Alexander & React Toolbox Team (http://github.com/VACO-GitHub)",
+  "repository": "github:VACO-Github/VACO-Github.github.io",
   "scripts": {
     "start": "cross-env NODE_ENV=development UV_THREADPOOL_SIZE=100 node ./server",
     "build": "cross-env NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack --config ./webpack.config.production --colors --profile --progress",
@@ -51,6 +52,5 @@
     "webpack-dev-middleware": "1.8.4",
     "webpack-hot-middleware": "2.13.0"
   },
-  "repository": "github:VACO-Github/vaco-components-library",
   "license": "MIT"
 }

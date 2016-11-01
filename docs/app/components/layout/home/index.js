@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
 import Button from 'react-toolbox/button';
-import {Card, CardTitle, CardMedia, CardText, CardActions} from 'react-toolbox/card';
 import Logo from '../../logo';
 import Navigation from '../../navigation';
 import style from './style';
@@ -22,15 +21,6 @@ const TwitterIcon = () => (
 const Home = () => (
   <article>
     <header className={style.header}>
-      <div className={style.github}>
-        <iframe src='https://ghbtns.com/github-btn.html?user=react-toolbox&amp;repo=react-toolbox&amp;type=star&amp;count=true' frameBorder='0' scrolling='0' />
-        <iframe src='https://ghbtns.com/github-btn.html?user=react-toolbox&amp;repo=react-toolbox&amp;type=fork&amp;count=true' frameBorder='0' scrolling='0' />
-        <a className={style.donate} href='https://www.paypal.me/javivelasco' target='_blank'>
-          <span className={style.legend}>support</span>
-          <span className={style.paypal}>paypal</span>
-        </a>
-      </div>
-
       <Logo className={style.logo} />
       <h2 className={style.title}>React Toolbox</h2>
       <h4 className={style.subtitle}>Bootstrap your application with beautiful Material Design Components</h4>
@@ -55,33 +45,8 @@ const Home = () => (
       </Link>
     </section>
 
-    <section className={`${style.content}`}>
-      <h3>About the authors</h3>
-      <ul className={style.authors}>
-        <Card className={style.author}>
-          <CardMedia aspectRatio='wide' image='/images/javivelasco.jpg' />
-          <CardTitle title="Javi Velasco" subtitle="@javivelasco" />
-          <CardText>Software gardener • Film, music & comic lover • Frontend Engineer at Audiense  • Any biographer in the room?</CardText>
-          <CardActions>
-            <Button href='http://github.com/javivelasco' target='_blank'><GithubIcon /> Github</Button>
-            <Button href='http://twitter.com/javivelasco' target='_blank' className={style.twitter}><TwitterIcon /> Twitter</Button>
-          </CardActions>
-        </Card>
-
-        <Card className={style.author}>
-          <CardMedia aspectRatio='wide' image='/images/soyjavi.jpg' />
-          <CardTitle title="Javi Jiménez" subtitle="@soyjavi" />
-          <CardText>Creative Doer · A complicated #human who builds stuff · #author · #opensource lover · #traveller · with a dark past being CEO & CTO</CardText>
-          <CardActions>
-            <Button href='http://github.com/soyjavi' target='_blank'><GithubIcon /> Github</Button>
-            <Button href='http://twitter.com/soyjavi' target='_blank' className={style.twitter}><TwitterIcon /> Twitter</Button>
-          </CardActions>
-        </Card>
-      </ul>
-    </section>
-
     <footer className={style.footer}>
-      <p>React Toolbox © 2016</p>
+      <p><a href="http://react-toolbox.com">React Toolbox</a> © 2016</p>
       <small>Crafted with <span className={style.love}>ღ</span> between Spain and Thailand</small>
     </footer>
   </article>

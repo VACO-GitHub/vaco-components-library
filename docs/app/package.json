@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "Application Portion Documentation for V. Alexander's Implementation of React Toolbox Components",
   "author": "V. Alexander & React Toolbox Team (http://github.com/VACO-GitHub)",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "autoprefixer": "^6.5.1",
     "babel-core": "^6.18.0",
@@ -46,6 +47,5 @@
     "webpack-dev-middleware": "^1.8.4",
     "webpack-hot-middleware": "^2.13.1"
   },
-  "license": "MIT",
-  "repository": "github:"
+  "license": "MIT"
 }
