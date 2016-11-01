@@ -32,7 +32,7 @@ import style from './style';
 
 const RootAppBar = () => (
   <AppBar className={style.appbar} fixed flat>
-    <h1>React Toolbox <small>Spec {VERSION}</small></h1>
+    <h1>V. Alexander's React Toolbox | <small>Spec {VERSION}</small></h1>
     <ButtonToolbox
       accent
       className={style.github}

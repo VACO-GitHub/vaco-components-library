@@ -1,7 +1,7 @@
-$slider-main-color: $color-primary !default;
+$slider-main-color: $color-original-primary !default;
 $slider-main-color-contrast: $color-primary-contrast !default;
 $slider-disabled-color: rgba(177, 177, 177, 1) !default;
-$slider-snap-color: $color-black !default;
+$slider-snap-color: $color-original-primary-dark !default;
 $slider-knob-size: 3.2 * $unit !default;
 $slider-inner-knob-size: 1.2 * $unit !default;
 $slider-snap-size: .2 * $unit !default;

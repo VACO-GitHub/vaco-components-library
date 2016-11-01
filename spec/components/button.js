@@ -7,7 +7,7 @@ const ButtonTest = () => (
     <h5>Buttons</h5>
     <p>lorem ipsum...</p>
 
-    <Button href='http://github.com/javivelasco' target='_blank' raised>
+    <Button href='http://github.com/VACO-GitHub' target='_blank' raised>
       <GithubIcon /> Github
     </Button>
     <Button icon='bookmark' label='Bookmark' accent onRippleEnded={rippleEnded} />

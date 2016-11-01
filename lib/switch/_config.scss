@@ -1,10 +1,10 @@
-$switch-color: $color-primary !default;
+$switch-color: $color-original-primary !default;
 $switch-text-color: $color-black !default;
 $switch-thumb-off-color: $palette-grey-50 !default;
-$switch-track-on-color: rgba($color-primary, 0.5) !default;
+$switch-track-on-color: rgba($color-original-primary, 0.5) !default;
 $switch-track-off-color: rgba($color-black, 0.26) !default;
 $switch-off-ripple-color: rgba($color-black, 0.4) !default;
-$switch-on-focus-color: rgba($color-primary, 0.26) !default;
+$switch-on-focus-color: rgba($color-original-primary, 0.26) !default;
 $switch-off-focus-color: rgba($color-black, 0.1) !default;
 $switch-disabled-thumb-color: $palette-grey-400 !default;
 $switch-disabled-track-color: rgba($color-black, 0.12) !default;

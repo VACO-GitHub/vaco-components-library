@@ -5,11 +5,11 @@ const AppBarTest = () => (
   <section>
     <h5>AppBar</h5>
     <br/>
-    <AppBar title='Title' />
+    <AppBar title='V. Alexander' />
     <br/>
-    <AppBar leftIcon='menu' title='Title' />
+    <AppBar leftIcon='menu' title='V. Alexander' />
     <br/>
-    <AppBar leftIcon='arrow_back' title='Title' rightIcon='close' />
+    <AppBar leftIcon='arrow_back' title='V. Alexander' rightIcon='close' />
     <br/>
     <AppBar>
       Custom content

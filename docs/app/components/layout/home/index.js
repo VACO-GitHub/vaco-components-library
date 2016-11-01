@@ -47,8 +47,8 @@ const Home = () => (
     </section>
 
     <footer className={style.footer}>
-      <p><a href="http://react-toolbox.com">React Toolbox</a> © 2016</p>
-      <small>Crafted with <span className={style.love}>ღ</span> between Spain and Thailand</small>
+      <p><a href="http://valexander.com/">V. Alexander</a> | <a href="http://react-toolbox.com">React Toolbox</a> © 2016</p>
+      <small>Crafted with <span className={style.love}>ღ</span> between Spain, Thailand, and Nashville, TN.</small>
     </footer>
   </article>
 );
