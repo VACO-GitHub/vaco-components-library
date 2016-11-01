@@ -13,7 +13,7 @@ module.exports = {
     filename: 'docs.js'
   },
   resolve: {
-    extensions: ['', '.scss', '.js', '.json', '.md'],
+    extensions: ['', '.scss', '.js', '.json', 'React', '.md'],
     packageMains: ['browser', 'web', 'browserify', 'main', 'style'],
     alias: {
       'react-toolbox': path.resolve(__dirname + './../components')
