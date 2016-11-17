@@ -35,7 +35,6 @@ const factory = (Chip, Input) => {
        autocomplete: PropTypes.string,
        focus: PropTypes.string,
        input: PropTypes.string,
-       label: PropTypes.string,
        suggestion: PropTypes.string,
        suggestions: PropTypes.string,
        up: PropTypes.string,
@@ -97,7 +96,7 @@ const factory = (Chip, Input) => {
    };
 
    handleQueryChange = (value) => {
-     this.setState({query: value, showAllSuggestions: false});
+     this.setState({query: value, showAllSuggestions: false, active: null});
    };
 
    handleQueryFocus = () => {
@@ -116,9 +115,7 @@ const factory = (Chip, Input) => {
      if (shouldClearQuery) {
        this.setState({query: ''});
      }
-   };
 
-   handleQueryKeyUp = (event) => {
      if (event.which === 13) {
        let target = this.state.active;
        if (!target) {
@@ -129,7 +126,9 @@ const factory = (Chip, Input) => {
        }
        this.select(event, target);
      }
+   };
 
+   handleQueryKeyUp = (event) => {
      if (event.which === 27) ReactDOM.findDOMNode(this).querySelector('input').blur();
 
      if ([40, 38].indexOf(event.which) !== -1) {
@@ -308,6 +307,8 @@ const factory = (Chip, Input) => {
            onFocus={this.handleQueryFocus}
            onKeyDown={this.handleQueryKeyDown}
            onKeyUp={this.handleQueryKeyUp}
+           theme={theme}
+           themeNamespace="input"
            value={this.state.query}
          />
          {this.renderSuggestions()}

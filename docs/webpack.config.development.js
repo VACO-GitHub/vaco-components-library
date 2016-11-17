@@ -17,7 +17,7 @@ module.exports = {
     publicPath: '/'
   },
   resolve: {
-    extensions: ['', '.scss', '.js', '.json', 'React', '.md'],
+    extensions: ['', '.scss', '.js', '.json', '.md'],
     packageMains: ['browser', 'web', 'browserify', 'main', 'style'],
     alias: {
       'react-toolbox': path.resolve(__dirname + './../components'),
