@@ -2,7 +2,7 @@
   "name": "vaco-components-library",
   "description": "A set of React components implementing Google's Material Design specification with the power of CSS Modules and SASS. Based off the `react-toolbox` repository.",
   "homepage": "http://valexander.com",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "./lib",
   "author": {
     "name": "V. Alexander with the React Toolbox Team",
