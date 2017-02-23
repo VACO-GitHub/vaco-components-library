@@ -9,4 +9,3 @@ tests.webpack.js
 webpack.config.*
 docs
 spec
-.DS_STORE

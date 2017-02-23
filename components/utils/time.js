@@ -1,4 +1,25 @@
 const dateLocales = {
+  cs: {
+    months: 'Leden_Únor_Březen_Duben_Květen_Červen_Červenec_Srpen_Září_Říjen_Listopad_Prosinec'.split('_'),
+    monthsShort: 'Led_Úno_Bře_Dub_Kvě_Čvn_Čvc_Srp_Zář_Říj_Lis_Pro'.split('_'),
+    weekdays: 'Neděle_Pondělí_Úterý_Středa_Čtvrtek_Pátek_Sobota'.split('_'),
+    weekdaysShort: 'Ne_Po_Út_St_Čt_Pá_So'.split('_'),
+    weekdaysLetter: 'N_P_Ú_S_Č_P_S'.split('_')
+  },
+  de: {
+    months: 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split('_'),
+    monthsShort: 'Jan_Feb_März_Apr_Mai_Juni_Juli_Aug_Sept_Okt_Nov_Dez'.split('_'),
+    weekdays: 'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split('_'),
+    weekdaysShort: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
+    weekdaysLetter: 'S_M_D_M_D_F_S'.split('_')
+  },
+  no: {
+    months: 'januar_februar_mars_april_mai_juni_juli_august_september_oktober_november_desember'.split('_'),
+    monthsShort: 'jan._feb._mars_april_mai_juni_juli_aug._sep._okt._nov._des.'.split('_'),
+    weekdays: 'søndag_mandag_tirsdag_onsdag_torsdag_fredag_lørdag'.split('_'),
+    weekdaysShort: 'søn_man_tir_ons_tor_fre_lør'.split('_'),
+    weekdaysLetter: []
+  },
   en: {
     months: 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_'),
     monthsShort: 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),
@@ -126,6 +147,7 @@ const dateLocales = {
     weekdaysLetter: []
   }
 };
+
 const time = {
   getDaysInMonth (d) {
     const resultDate = this.getFirstDayOfMonth(d);

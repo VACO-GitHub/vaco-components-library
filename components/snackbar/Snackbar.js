@@ -24,7 +24,6 @@ const factory = (Overlay, Button) => {
         active: PropTypes.string,
         button: PropTypes.string,
         cancel: PropTypes.string,
-        icon: PropTypes.string,
         label: PropTypes.string,
         snackbar: PropTypes.string,
         warning: PropTypes.string
@@ -33,18 +32,29 @@ const factory = (Overlay, Button) => {
       type: PropTypes.oneOf([ 'accept', 'cancel', 'warning' ])
     };
 
+    componentDidMount () {
+      if (this.props.active && this.props.timeout) {
+        this.scheduleTimeout(this.props);
+      }
+    }
+
     componentWillReceiveProps (nextProps) {
       if (nextProps.active && nextProps.timeout) {
-        if (this.curTimeout) clearTimeout(this.curTimeout);
-        this.curTimeout = setTimeout(() => {
-          nextProps.onTimeout();
-          this.curTimeout = null;
-        }, nextProps.timeout);
+        this.scheduleTimeout(nextProps);
       }
     }
 
     componentWillUnmount () {
       clearTimeout(this.curTimeout);
+    }
+
+    scheduleTimeout = props => {
+      const { onTimeout, timeout } = props;
+      if (this.curTimeout) clearTimeout(this.curTimeout);
+      this.curTimeout = setTimeout(() => {
+        if (onTimeout) onTimeout();
+        this.curTimeout = null;
+      }, timeout);
     }
 
     render () {

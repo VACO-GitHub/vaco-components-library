@@ -3,13 +3,11 @@ const express = require('express');
 const webpack = require('webpack');
 const internalIp = require('internal-ip');
 const config = require('./webpack.config.development');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const app = express();
 const compiler = webpack(config);
 
-app.use(webpackDevMiddleware(compiler, {
+app.use(require('webpack-dev-middleware')(compiler, {
   noInfo: true,
   publicPath: config.output.publicPath,
   stats: {
@@ -17,7 +15,7 @@ app.use(webpackDevMiddleware(compiler, {
   }
 }));
 
-app.use(webpackHotMiddleware(compiler));
+app.use(require('webpack-hot-middleware')(compiler));
 
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, './spec/index.html'));
