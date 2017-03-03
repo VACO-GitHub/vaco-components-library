@@ -24,6 +24,7 @@ const factory = (Chip, Input) => {
        React.PropTypes.string,
        React.PropTypes.node
      ]),
+     inputOnChange: PropTypes.func,
      keepFocusOnChange: PropTypes.bool,
      label: React.PropTypes.oneOfType([
        React.PropTypes.string,
@@ -117,7 +118,11 @@ const factory = (Chip, Input) => {
 
    handleQueryChange = (value) => {
      if (this.props.onQueryChange) this.props.onQueryChange(value);
-     this.setState({query: value, showAllSuggestions: false, active: null});
+     this.setState({query: value, showAllSuggestions: false, active: null}, () => {
+       if (this.props.inputOnChange) {
+         this.props.inputOnChange(value);
+       }
+     });
    };
 
    handleQueryFocus = (event) => {

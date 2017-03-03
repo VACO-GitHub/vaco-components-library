@@ -63,6 +63,11 @@ export interface AutocompleteProps extends ReactToolbox.Props {
    */
   error?: string | React.ReactNode;
   /**
+   * Handles input change inside setState() from:
+   * https://github.com/react-toolbox/react-toolbox/issues/828/
+   */
+  inputOnChange?: Function;
+  /**
    * Whether component should keep focus after value change.
    * @default false
    */

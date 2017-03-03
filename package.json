@@ -1,12 +1,30 @@
 {
   "name": "vaco-components-library",
   "description": "A set of React components implementing Google's Material Design specification with the power of CSS Modules and SASS. Based off the `react-toolbox` repository.",
-  "homepage": "http://valexander.com",
-  "version": "1.0.4",
+  "homepage": "https://www.valexander.com/",
+  "version": "1.0.5",
   "main": "./lib",
   "author": {
-    "name": "V. Alexander with the React Toolbox Team",
-    "url": "http://github.com/VACO-GitHub"
+    "name": "V. Alexander & Company, Inc. alongside the React Toolbox team of open-source contributors.",
+    "url": "https://github.com/VACO-GitHub/"
+  },
+  "scripts": {
+    "babel": "babel ./components --out-dir ./lib",
+    "build": "cross-env NODE_ENV=production npm run babel && npm run sass && npm run tsd",
+    "clean": "rimraf ./lib",
+    "lint": "npm run lint:js && npm run lint:scss",
+    "lint:js": "eslint ./ --ext .js",
+    "lint:scss": "sass-lint ./components/**/*.scss -v -i ./components/slider/style.scss",
+    "lint:staged": "lint-staged",
+    "patch": "bumped release patch",
+    "prebuild": "npm run clean",
+    "prepublish": "npm run build",
+    "release": "bumped release",
+    "sass": "cpx \"./components/**/*.scss\" ./lib",
+    "start": "cross-env NODE_ENV=development UV_THREADPOOL_SIZE=100 node ./server",
+    "test": "cross-env NODE_ENV=test karma start",
+    "test:watch": "cross-env NODE_ENV=test karma start --no-single-run",
+    "tsd": "cpx \"./components/**/*.d.ts\" ./lib"
   },
   "contributors": [
     {
@@ -109,29 +127,10 @@
     "webpack-dev-middleware": "1.9.0",
     "webpack-hot-middleware": "2.13.0"
   },
-  "scripts": {
-    "babel": "babel ./components --out-dir ./lib",
-    "build": "cross-env NODE_ENV=production npm run babel && npm run sass && npm run tsd",
-    "clean": "rimraf ./lib",
-    "lint": "npm run lint:js && npm run lint:scss",
-    "lint:js": "eslint ./ --ext .js",
-    "lint:scss": "sass-lint ./components/**/*.scss -v -i ./components/slider/style.scss",
-    "lint:staged": "lint-staged",
-    "patch": "bumped release patch",
-    "prebuild": "npm run clean",
-    "prepublish": "npm run build",
-    "release": "bumped release",
-    "sass": "cpx \"./components/**/*.scss\" ./lib",
-    "start": "cross-env NODE_ENV=development UV_THREADPOOL_SIZE=100 node ./server",
-    "test": "cross-env NODE_ENV=test karma start",
-    "test:watch": "cross-env NODE_ENV=test karma start --no-single-run",
-    "tsd": "cpx \"./components/**/*.d.ts\" ./lib"
-  },
   "license": "MIT",
   "peerDependencies": {
     "react": "~0.14 || ~15.4.2",
     "react-addons-css-transition-group": "~0.14.0 || ~15.4.2",
     "react-dom": "~0.14.0 || ~15.4.2"
-  },
-  "pre-commit": "lint:staged"
+  }
 }
