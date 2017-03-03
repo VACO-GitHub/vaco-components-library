@@ -117,11 +117,9 @@ const factory = (Chip, Input) => {
    };
 
    handleQueryChange = (value) => {
-     if (this.props.onQueryChange) this.props.onQueryChange(value);
+     // if (this.props.onQueryChange) this.props.onQueryChange(value);
      this.setState({query: value, showAllSuggestions: false, active: null}, () => {
-       if (this.props.inputOnChange) {
-         this.props.inputOnChange(value);
-       }
+       if (this.props.inputOnChange) this.props.inputOnChange(value);
      });
    };
 
@@ -362,7 +360,7 @@ const factory = (Chip, Input) => {
    render () {
      const {
       allowCreate, error, label, source, suggestionMatch, //eslint-disable-line no-unused-vars
-      selectedPosition, keepFocusOnChange, showSuggestionsWhenValueIsSet, showSelectedWhenNotInSource, onQueryChange,   //eslint-disable-line no-unused-vars
+      selectedPosition, keepFocusOnChange, showSuggestionsWhenValueIsSet, showSelectedWhenNotInSource, onQueryChange, inputOnChange,  //eslint-disable-line no-unused-vars
       theme, ...other
     } = this.props;
      const className = classnames(theme.autocomplete, {
