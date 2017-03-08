@@ -16,6 +16,21 @@ export default class Value extends Component {
     value: PropTypes.object.isRequired // the option object for this value
   };
 
+  constructor (props) {
+    super(props);
+    // Mouse methods
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    // Touch methods
+    this.handleTouchEndRemove = this.handleTouchEndRemove.bind(this);
+    this.handleTouchMove = this.handleTouchMove.bind(this);
+    this.handleTouchStart = this.handleTouchStart.bind(this);
+    // Miscellaneous methods
+    this.onRemove = this.onRemove.bind(this);
+    // Render methods
+    this.renderRemoveIcon = this.renderRemoveIcon.bind(this);
+    this.renderLabel = this.renderLabel.bind(this);
+  }
+
   handleMouseDown (event) {
     if (event.type === 'mousedown' && event.button !== 0) {
       return;
@@ -30,12 +45,6 @@ export default class Value extends Component {
     if (this.props.value.href) {
       event.stopPropagation();
     }
-  }
-
-  onRemove (event) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.props.onRemove(this.props.value);
   }
 
   handleTouchEndRemove (event) {
@@ -57,6 +66,12 @@ export default class Value extends Component {
   handleTouchStart (event) {
     // Set a flag that the view is not being dragged
     this.dragging = false;
+  }
+
+  onRemove (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.props.onRemove(this.props.value);
   }
 
   renderRemoveIcon () {

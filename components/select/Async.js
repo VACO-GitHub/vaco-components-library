@@ -1,11 +1,14 @@
 import React, { Component, PropTypes } from 'react';
-import Select from '../select/Select.js';
+import Select from './Select';
 import stripDiacritics from '../utils/stripDiacritics';
 
-const defaultChildren = props => <Select {...props} />;
+const defaultChildren = (props) => {
+  return <Select {...props} />;
+};
+
 const defaultCache = {};
 
-export default class Typeahead extends Component {
+export default class Async extends Component {
   static propTypes = {
     autoload: PropTypes.bool.isRequired, // automatically call the `loadOptions` prop on-mount; defaults to true
     cache: PropTypes.any, // object to use to cache results; set to null/false to disable caching
@@ -18,7 +21,7 @@ export default class Typeahead extends Component {
       PropTypes.string,
       PropTypes.node
     ]),
-    multi: PropTypes.bool, // TODO
+    multi: PropTypes.bool,
     noResultsText: PropTypes.oneOfType([
       // field noResultsText, displayed when no options come back from the server
       PropTypes.string,
@@ -37,9 +40,6 @@ export default class Typeahead extends Component {
       PropTypes.string,
       PropTypes.node
     ]),
-    theme: PropTypes.shape({
-      active: PropTypes.string
-    }),
     value: PropTypes.any // initial field value
   };
 
@@ -56,22 +56,23 @@ export default class Typeahead extends Component {
 
   constructor (props, context) {
     super(props, context);
+
     this._cache = props.cache === defaultCache ? {} : props.cache;
+
     this.state = {
       isLoading: false,
       options: props.options
     };
     this._onInputChange = this._onInputChange.bind(this);
     this.clearOptions = this.clearOptions.bind(this);
-    this.focus = this.focus.bind(this);
-    this.inputValue = this.inputValue.bind(this);
-    this.loadOptions = this.loadOptions.bind(this);
-    this.noResultsText = this.noResultsText.bind(this);
   }
 
   componentDidMount () {
     const { autoload } = this.props;
-    if (autoload) this.loadOptions('');
+
+    if (autoload) {
+      this.loadOptions('');
+    }
   }
 
   componentWillUpdate (nextProps /* , nextState */) {
@@ -85,27 +86,8 @@ export default class Typeahead extends Component {
     });
   }
 
-  _onInputChange (inputValue) {
-    const { ignoreAccents, ignoreCase, onInputChange } = this.props;
-    let newInputValue = inputValue;
-
-    if (ignoreAccents) newInputValue = stripDiacritics(inputValue);
-    if (ignoreCase) newInputValue = inputValue.toLowerCase();
-    if (onInputChange) onInputChange(newInputValue);
-
-    return this.loadOptions(newInputValue);
-  }
-
   clearOptions () {
     this.setState({ options: [] });
-  }
-
-  focus () {
-    return this.select.focus;
-  }
-
-  inputValue () {
-    return this.select ? this.select.state.inputValue : '';
   }
 
   loadOptions (inputValue) {
@@ -113,7 +95,9 @@ export default class Typeahead extends Component {
     const cache = this._cache;
 
     if (cache && cache.hasOwnProperty(inputValue)) {
-      this.setState({ options: cache[inputValue] });
+      this.setState({
+        options: cache[inputValue]
+      });
       return;
     }
 
@@ -123,7 +107,9 @@ export default class Typeahead extends Component {
 
         const options = data && data.options || [];
 
-        if (cache) cache[inputValue] = options;
+        if (cache) {
+          cache[inputValue] = options;
+        }
 
         this.setState({
           isLoading: false,
@@ -136,7 +122,6 @@ export default class Typeahead extends Component {
     this._callback = callback;
 
     const promise = loadOptions(inputValue, callback);
-
     if (promise) {
       promise.then(data => callback(null, data), error => callback(error));
     }
@@ -150,36 +135,71 @@ export default class Typeahead extends Component {
     return inputValue;
   }
 
+  _onInputChange (inputValue) {
+    const { ignoreAccents, ignoreCase, onInputChange } = this.props;
+    let newInputValue = inputValue;
+
+    if (ignoreAccents) {
+      newInputValue = stripDiacritics(inputValue);
+    }
+
+    if (ignoreCase) {
+      newInputValue = inputValue.toLowerCase();
+    }
+
+    if (onInputChange) {
+      onInputChange(newInputValue);
+    }
+
+    return this.loadOptions(newInputValue);
+  }
+
+  inputValue () {
+    if (this.select) {
+      return this.select.state.inputValue;
+    }
+    return '';
+  }
+
   noResultsText () {
     const { loadingPlaceholder, noResultsText, searchPromptText } = this.props;
     const { isLoading } = this.state;
+
     const inputValue = this.inputValue();
 
-    if (isLoading) return loadingPlaceholder;
-    if (inputValue && noResultsText) return noResultsText;
-
+    if (isLoading) {
+      return loadingPlaceholder;
+    }
+    if (inputValue && noResultsText) {
+      return noResultsText;
+    }
     return searchPromptText;
+  }
+
+  focus () {
+    this.select.focus();
   }
 
   render () {
     const { children, loadingPlaceholder, placeholder } = this.props;
     const { isLoading, options } = this.state;
+
     const props = {
       noResultsText: this.noResultsText(),
+      placeholder: isLoading ? loadingPlaceholder : placeholder,
       options: isLoading && loadingPlaceholder ? [] : options,
-      placeHolder: isLoading ? loadingPlaceholder : placeholder,
-      ref: ref => {
-        this.select = ref;
-        return;
-      },
+      ref: ref => { this.select = ref; return; },
       onChange: newValues => {
-        if (this.props.multi && this.props.value && newValues.length > this.props.value.length) {
+        if (this.props.multi
+          && this.props.value
+          && newValues.length > this.props.value.length
+        ) {
           this.clearOptions();
         }
         this.props.onChange(newValues);
-        return;
       }
     };
+
     return children({
       ...this.props,
       ...props,

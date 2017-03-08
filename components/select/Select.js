@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import AutosizeInput from 'react-input-autosize';
 import classNames from 'classnames';
 
-import Option from '../Option';
-import Value from '../Value';
+import Option from '../option';
+import Value from '../value';
 
 import defaultArrowRenderer from '../utils/defaultArrowRenderer';
 import defaultFilterOptions from '../utils/defaultFilterOptions';
@@ -102,6 +102,7 @@ class Select extends Component {
     valueRenderer: PropTypes.func, // valueRenderer: function (option) {}
     wrapperStyle: PropTypes.object // optional style to apply to the component wrapper
   };
+
   static defaultProps = {
     addLabelText: 'Add "{label}"?',
     arrowRenderer: defaultArrowRenderer,
@@ -153,6 +154,66 @@ class Select extends Component {
       isPseudoFocused: false,
       required: false
     };
+    // Focus methods
+    this.focus = this.focus.bind(this);
+    this.focusAdjacentOption = this.focusAdjacentOption.bind(this);
+    this.focusEndOption = this.focusEndOption.bind(this);
+    this.focusNextOption = this.focusNextOption.bind(this);
+    this.focusOption = this.focusOption.bind(this);
+    this.focusPageDownOption = this.focusPageDownOption.bind(this);
+    this.focusPageUpOption = this.focusPageUpOption.bind(this);
+    this.focusStartOption = this.focusStartOption.bind(this);
+    this.getFocusedOption = this.getFocusedOption.bind(this);
+    this.selectFocusedOption = this.selectFocusedOption.bind(this);
+    // Input methods
+    this.blurInput = this.blurInput.bind(this);
+    this.getInputValue = this.getInputValue.bind(this);
+    this.handleInputBlur = this.handleInputBlur.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleInputFocus = this.handleInputFocus.bind(this);
+    // Key methods
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    // Menu methods
+    this.closeMenu = this.closeMenu.bind(this);
+    this.handleMenuScroll = this.handleMenuScroll.bind(this);
+    // Miscellaneous methods
+    this.handleRequired = this.handleRequired.bind(this);
+    // Mouse methods
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseDownOnArrow = this.handleMouseDownOnArrow.bind(this);
+    this.handleMouseDownOnMenu = this.handleMouseDownOnMenu.bind(this);
+    // Option methods
+    this.filterOptions = this.filterOptions.bind(this);
+    this.getFocusableOptionIndex = this.getFocusableOptionIndex.bind(this);
+    this.getOptionLabel = this.getOptionLabel.bind(this);
+    this.onOptionRef = this.onOptionRef.bind(this);
+    // Touch methods
+    this.handleTouchEnd = this.handleTouchEnd.bind(this);
+    this.handleTouchEndClearValue = this.handleTouchEndClearValue.bind(this);
+    this.handleTouchMove = this.handleTouchMove.bind(this);
+    this.handleTouchOutside = this.handleTouchOutside.bind(this);
+    this.handleTouchStart = this.handleTouchStart.bind(this);
+    this.toggleTouchOutsideEvent = this.toggleTouchOutsideEvent.bind(this);
+    // Value methods
+    this.addValue = this.addValue.bind(this);
+    this.clearValue = this.clearValue.bind(this);
+    this.expandValue = this.expandValue.bind(this);
+    this.getResetValue = this.getResetValue.bind(this);
+    this.getValueArray = this.getValueArray.bind(this);
+    this.handleValueClick = this.handleValueClick.bind(this);
+    this.popValue = this.popValue.bind(this);
+    this.removeValue = this.removeValue.bind(this);
+    this.selectValue = this.selectValue.bind(this);
+    this.setValue = this.setValue.bind(this);
+    // Render methods
+    this.renderArrow = this.renderArrow.bind(this);
+    this.renderClear = this.renderClear.bind(this);
+    this.renderHiddenField = this.renderHiddenField.bind(this);
+    this.renderInput = this.renderInput.bind(this);
+    this.renderLoading = this.renderLoading.bind(this);
+    this.renderMenu = this.renderMenu.bind(this);
+    this.renderOuter = this.renderOuter.bind(this);
+    this.renderValue = this.renderValue.bind(this);
   }
 
   componentWillMount () {
@@ -242,29 +303,6 @@ class Select extends Component {
   *
   */
 
-  blurInput () {
-    if (!this.input) return;
-
-    this.input.blur();
-  }
-
-  closeMenu () {
-    if (this.props.onCloseResetsInput) {
-      this.setState({
-        isOpen: false,
-        isPseudoFocused: this.state.isFocused && !this.props.multi,
-        inputValue: ''
-      });
-    } else {
-      this.setState({
-        isOpen: false,
-        isPseudoFocused: this.state.isFocused && !this.props.multi,
-        inputValue: this.state.inputValue
-      });
-    }
-    this.hasScrolledToOption = false;
-  }
-
   /*
   *
   * `Focus` methods
@@ -281,36 +319,6 @@ class Select extends Component {
         isOpen: true
       });
     }
-  }
-
-  focusOption (option) {
-    this.setState({
-      focusedOption: option
-    });
-  }
-
-  focusNextOption () {
-    this.focusAdjacentOption('next');
-  }
-
-  focusPreviousOption () {
-    this.focusAdjacentOption('previous');
-  }
-
-  focusPageUpOption () {
-    this.focusAdjacentOption('page_up');
-  }
-
-  focusPageDownOption () {
-    this.focusAdjacentOption('page_down');
-  }
-
-  focusStartOption () {
-    this.focusAdjacentOption('start');
-  }
-
-  focusEndOption () {
-    this.focusAdjacentOption('end');
   }
 
   focusAdjacentOption (dir) {
@@ -330,7 +338,7 @@ class Select extends Component {
       return;
     }
     if (!options.length) return;
-    const focusedIndex = -1;
+    let focusedIndex = -1;
     for (let i = 0; i < options.length; i++) {
       if (this._focusedOption === options[i].option) {
         focusedIndex = i;
@@ -375,6 +383,36 @@ class Select extends Component {
     });
   }
 
+  focusEndOption () {
+    this.focusAdjacentOption('end');
+  }
+
+  focusNextOption () {
+    this.focusAdjacentOption('next');
+  }
+
+  focusOption (option) {
+    this.setState({
+      focusedOption: option
+    });
+  }
+
+  focusPageDownOption () {
+    this.focusAdjacentOption('page_down');
+  }
+
+  focusPageUpOption () {
+    this.focusAdjacentOption('page_up');
+  }
+
+  focusPreviousOption () {
+    this.focusAdjacentOption('previous');
+  }
+
+  focusStartOption () {
+    this.focusAdjacentOption('start');
+  }
+
   getFocusedOption () {
     return this._focusedOption;
   }
@@ -390,6 +428,16 @@ class Select extends Component {
   * <input> Events
   *
   */
+
+  blurInput () {
+    if (!this.input) return;
+
+    this.input.blur();
+  }
+
+  getInputValue () {
+    return this.state.inputValue;
+  }
 
   handleInputBlur (event) {
     // The check for menu.contains(activeElement) is necessary to prevent IE11's scrollbar from closing the menu in certain contexts.
@@ -443,10 +491,6 @@ class Select extends Component {
       isOpen
     });
     this._openAfterFocus = false;
-  }
-
-  getInputValue () {
-    return this.state.inputValue;
   }
 
   /*
@@ -532,6 +576,23 @@ class Select extends Component {
   * Menu Events
   *
   */
+  closeMenu () {
+    if (this.props.onCloseResetsInput) {
+      this.setState({
+        isOpen: false,
+        isPseudoFocused: this.state.isFocused && !this.props.multi,
+        inputValue: ''
+      });
+    } else {
+      this.setState({
+        isOpen: false,
+        isPseudoFocused: this.state.isFocused && !this.props.multi,
+        inputValue: this.state.inputValue
+      });
+    }
+    this.hasScrolledToOption = false;
+  }
+
   handleMenuScroll (event) {
     if (!this.props.onMenuScrollToBottom) return;
     const { target } = event;
@@ -641,6 +702,33 @@ class Select extends Component {
   * Option Methods
   *
   */
+  filterOptions (excludeOptions) {
+		const filterValue = this.state.inputValue;
+		const options = this.props.options || [];
+
+    if (!this.props.filterOptions) return options;
+
+		// Maintain backwards compatibility with boolean attribute
+		const filterOptions = typeof this.props.filterOptions === 'function'
+			? this.props.filterOptions
+			: defaultFilterOptions;
+
+		return filterOptions(
+			options,
+			filterValue,
+			excludeOptions,
+			{
+				filterOption: this.props.filterOption,
+				ignoreAccents: this.props.ignoreAccents,
+				ignoreCase: this.props.ignoreCase,
+				labelKey: this.props.labelKey,
+				matchPos: this.props.matchPos,
+				matchProp: this.props.matchProp,
+				valueKey: this.props.valueKey
+			}
+		);
+	}
+
   getFocusableOptionIndex (selectedOption) {
     const options = this._visibleOptions;
     if (!options.length) return null;
@@ -732,54 +820,9 @@ class Select extends Component {
 
   /*
   *
-  * `Value` Events
+  * `Value` Methods
   *
   */
-
-  /**
-	 * Retrieve a value from the given options and valueKey
-	 * @param	{String|Number|Array}	value	- the selected value(s)
-	 * @param	{Object}		props	- the Select component's props (or nextProps)
-	 */
-  expandValue (value, props) {
-    const valueType = typeof value;
-    if (valueType !== 'string' && valueType !== 'number' && valueType !== 'boolean') {
-      return value;
-    }
-    const { options, valueKey } = props;
-    if (!options) return;
-    for (let i = 0; i < options.length; i++) {
-      if (options[i][valueKey] === value) return options[i];
-    }
-  }
-
-  /**
-	 * Turns a value into an array from the given options
-	 * @param	{String|Number|Array}	value		- the value of the select input
-	 * @param	{Object}		nextProps	- optionally specify the nextProps so the returned array uses the latest configuration
-	 * @returns	{Array}	the value of the select represented in an array
-	 */
-  getValueArray (value, nextProps) {
-    let newValue = value;
-    /** support optionally passing in the `nextProps` so `componentWillReceiveProps` updates will function as expected */
-    const props = typeof nextProps === 'object' ? nextProps : this.props;
-    if (props.multi) {
-      if (typeof newValue === 'string') newValue = newValue.split(props.delimiter);
-      if (!Array.isArray(newValue)) {
-        if (newValue === null || newValue === undefined) return [];
-        newValue = [newValue];
-      }
-      return newValue.map(val => this.expandValue(val, props)).filter(i => i);
-    }
-    const expandedValue = this.expandValue(value, props);
-    return expandedValue ? [expandedValue] : [];
-  }
-
-  handleValueClick (option, event) {
-    if (!this.props.onValueClick) return;
-    this.props.onValueClick(option, event);
-  }
-
   addValue (value) {
     const valueArray = this.getValueArray(this.props.value);
     const visibleOptions = this._visibleOptions.filter(val => !val.disabled);
@@ -812,6 +855,23 @@ class Select extends Component {
     );
   }
 
+  /**
+	 * Retrieve a value from the given options and valueKey
+	 * @param	{String|Number|Array}	value	- the selected value(s)
+	 * @param	{Object}		props	- the Select component's props (or nextProps)
+	 */
+  expandValue (value, props) {
+    const valueType = typeof value;
+    if (valueType !== 'string' && valueType !== 'number' && valueType !== 'boolean') {
+      return value;
+    }
+    const { options, valueKey } = props;
+    if (!options) return;
+    for (let i = 0; i < options.length; i++) {
+      if (options[i][valueKey] === value) return options[i];
+    }
+  }
+
   getResetValue () {
     if (this.props.resetValue !== undefined) {
       return this.props.resetValue;
@@ -820,6 +880,33 @@ class Select extends Component {
     } else {
       return null;
     }
+  }
+
+  /**
+	 * Turns a value into an array from the given options
+	 * @param	{String|Number|Array}	value		- the value of the select input
+	 * @param	{Object}		nextProps	- optionally specify the nextProps so the returned array uses the latest configuration
+	 * @returns	{Array}	the value of the select represented in an array
+	 */
+  getValueArray (value, nextProps) {
+    let newValue = value;
+    /** support optionally passing in the `nextProps` so `componentWillReceiveProps` updates will function as expected */
+    const props = typeof nextProps === 'object' ? nextProps : this.props;
+    if (props.multi) {
+      if (typeof newValue === 'string') newValue = newValue.split(props.delimiter);
+      if (!Array.isArray(newValue)) {
+        if (newValue === null || newValue === undefined) return [];
+        newValue = [newValue];
+      }
+      return newValue.map(val => this.expandValue(val, props)).filter(i => i);
+    }
+    const expandedValue = this.expandValue(value, props);
+    return expandedValue ? [expandedValue] : [];
+  }
+
+  handleValueClick (option, event) {
+    if (!this.props.onValueClick) return;
+    this.props.onValueClick(option, event);
   }
 
   popValue () {

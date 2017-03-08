@@ -19,6 +19,21 @@ export default class Option extends Component {
     })
   };
 
+  constructor (props) {
+    super(props);
+    // Custom methods
+    this.blockEvent = this.blockEvent.bind(this);
+    this.onFocus = this.onFocus.bind(this);
+    // Mouse methods
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseEnter = this.handleMouseEnter.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    // Touch methods
+    this.handleTouchEnd = this.handleTouchEnd.bind(this);
+    this.handleTouchMove = this.handleTouchMove.bind(this);
+    this.handleTouchStart = this.handleTouchStart.bind(this);
+  }
+
   /*
   *
   *
@@ -39,6 +54,12 @@ export default class Option extends Component {
     }
   }
 
+  onFocus (event) {
+		if (!this.props.isFocused) {
+			this.props.onFocus(this.props.option, event);
+		}
+	}
+
   /*
   *
   * Mouse Events
@@ -54,11 +75,11 @@ export default class Option extends Component {
   }
 
   handleMouseEnter (event) {
-    this.onFocus(event);
+    this.props.onFocus(event);
   }
 
   handleMouseMove (event) {
-    this.onFocus(event);
+    this.props.onFocus(event);
   }
 
   /*
