@@ -91,6 +91,18 @@ export default class Creatable extends Component {
     shouldKeyDownEventCreateNewOption
   };
 
+  constructor (props) {
+    super(props);
+    // Custom methods
+    this.createNewOption = this.createNewOption.bind(this);
+    this.filterOptions = this.filterOptions.bind(this);
+    this.isOptionUnique = this.isOptionUnique.bind(this);
+    this.menuRenderer = this.menuRenderer.bind(this);
+    this.onInputChange = this.onInputChange.bind(this);
+    this.onInputKeyDown = this.onInputKeyDown.bind(this);
+    this.onOptionSelect = this.onOptionSelect.bind(this);
+  }
+
   createNewOption () {
     const {
       onNewOptionClick,
@@ -175,9 +187,7 @@ export default class Creatable extends Component {
   }
 
   menuRenderer (params) {
-    const { menuRenderer } = this.props;
-
-    return menuRenderer({
+    return this.props.menuRenderer({
       ...params,
       onSelect: this.onOptionSelect,
       selectValue: this.onOptionSelect
@@ -185,18 +195,12 @@ export default class Creatable extends Component {
   }
 
   onInputChange (input) {
-    const { onInputChange } = this.props;
-
-    if (onInputChange) {
-      onInputChange(input);
-    }
-
+    if (this.props.onInputChange) this.props.onInputChange(input);
     // This value may be needed in between Select mounts (when this.select is null)
     this.inputValue = input;
   }
 
   onInputKeyDown (event) {
-    const { onInputKeyDown } = this.props;
     const focusedOption = this.select.getFocusedOption();
 
     if (
@@ -208,8 +212,8 @@ export default class Creatable extends Component {
 
       // Prevent decorated Select from doing anything additional with this keyDown event
       event.preventDefault();
-    } else if (onInputKeyDown) {
-      onInputKeyDown(event);
+    } else if (this.props.onInputKeyDown) {
+      this.props.onInputKeyDown(event);
     }
   }
 

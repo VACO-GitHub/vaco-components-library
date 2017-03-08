@@ -65,6 +65,10 @@ export default class Async extends Component {
     };
     this._onInputChange = this._onInputChange.bind(this);
     this.clearOptions = this.clearOptions.bind(this);
+    this.focus = this.focus.bind(this);
+    this.inputValue = this.inputValue.bind(this);
+    this.loadOptions = this.loadOptions.bind(this);
+    this.noResultsText = this.noResultsText.bind(this);
   }
 
   componentDidMount () {
@@ -86,8 +90,38 @@ export default class Async extends Component {
     });
   }
 
+  _onInputChange (inputValue) {
+    const { ignoreAccents, ignoreCase, onInputChange } = this.props;
+    let newInputValue = inputValue;
+
+    if (ignoreAccents) {
+      newInputValue = stripDiacritics(inputValue);
+    }
+
+    if (ignoreCase) {
+      newInputValue = inputValue.toLowerCase();
+    }
+
+    if (onInputChange) {
+      onInputChange(newInputValue);
+    }
+
+    return this.loadOptions(newInputValue);
+  }
+
   clearOptions () {
     this.setState({ options: [] });
+  }
+
+  focus () {
+    this.select.focus();
+  }
+
+  inputValue () {
+    if (this.select) {
+      return this.select.state.inputValue;
+    }
+    return '';
   }
 
   loadOptions (inputValue) {
@@ -135,32 +169,6 @@ export default class Async extends Component {
     return inputValue;
   }
 
-  _onInputChange (inputValue) {
-    const { ignoreAccents, ignoreCase, onInputChange } = this.props;
-    let newInputValue = inputValue;
-
-    if (ignoreAccents) {
-      newInputValue = stripDiacritics(inputValue);
-    }
-
-    if (ignoreCase) {
-      newInputValue = inputValue.toLowerCase();
-    }
-
-    if (onInputChange) {
-      onInputChange(newInputValue);
-    }
-
-    return this.loadOptions(newInputValue);
-  }
-
-  inputValue () {
-    if (this.select) {
-      return this.select.state.inputValue;
-    }
-    return '';
-  }
-
   noResultsText () {
     const { loadingPlaceholder, noResultsText, searchPromptText } = this.props;
     const { isLoading } = this.state;
@@ -174,10 +182,6 @@ export default class Async extends Component {
       return noResultsText;
     }
     return searchPromptText;
-  }
-
-  focus () {
-    this.select.focus();
   }
 
   render () {
