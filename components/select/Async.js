@@ -40,6 +40,7 @@ export default class Async extends Component {
       PropTypes.string,
       PropTypes.node
     ]),
+    theme: PropTypes.any,
     value: PropTypes.any // initial field value
   };
 
@@ -129,6 +130,10 @@ export default class Async extends Component {
     const cache = this._cache;
 
     if (cache && cache.hasOwnProperty(inputValue)) {
+      console.log('Cache exists and is:');
+      console.info(cache);
+      console.log('Cache exists and inputValue is:');
+      console.info(inputValue);
       this.setState({
         options: cache[inputValue]
       });
