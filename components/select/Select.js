@@ -53,6 +53,8 @@ class Select extends Component {
     clearAllText: PropTypes.oneOfType([ PropTypes.string, PropTypes.node ]),
     // title for the "clear" control when multi: true
     clearRenderer: PropTypes.func,
+    // render the clear component via props for more control
+    clearRendererFull: PropTypes.func,
     // create clearable x element
     clearValueText: PropTypes.oneOfType([ PropTypes.string, PropTypes.node ]),
     // title for the "clear" control
@@ -69,6 +71,8 @@ class Select extends Component {
     filterOption: PropTypes.func,
     // method to filter a single option (option, filterString)
     filterOptions: PropTypes.any,
+    // boolean to force clear the select's value
+    forceClearValue: PropTypes.bool,
     // boolean to enable default filtering or function to filter the options array ([options], filterString, [values])
     ignoreAccents: PropTypes.bool,
     // whether to strip diacritics when filtering
@@ -217,6 +221,7 @@ class Select extends Component {
     disabled: false,
     escapeClearsValue: true,
     filterOptions: defaultFilterOptions,
+    forceClearValue: false,
     ignoreAccents: true,
     ignoreCase: true,
     inputProps: {},
@@ -311,6 +316,7 @@ class Select extends Component {
     // Value methods
     this.addValue = this.addValue.bind(this);
     this.clearValue = this.clearValue.bind(this);
+    this.clearValueByForce = this.clearValueByForce.bind(this);
     this.expandValue = this.expandValue.bind(this);
     this.getResetValue = this.getResetValue.bind(this);
     this.getValueArray = this.getValueArray.bind(this);
@@ -358,6 +364,7 @@ class Select extends Component {
     if (nextProps.required) {
       this.setState({ required: this.handleRequired(valueArray[0], nextProps.multi) });
     }
+    if (nextProps.forceClearValue) this.clearValueByForce();
   }
 
   componentWillUpdate (nextProps, nextState) {
@@ -429,7 +436,13 @@ class Select extends Component {
   *
   */
   hasError () {
-    return this.props.meta && this.props.meta.error ? true : false;
+    const { meta } = this.props;
+    // `meta` exists, there is an error to display, and the field was interacted with
+    return meta
+      && meta.error
+      && meta.touched
+      ? true
+      : false;
   }
 
   /*
@@ -699,30 +712,25 @@ class Select extends Component {
   *
   */
   closeMenu () {
-    if (this.props.onCloseResetsInput) {
-      this.setState({
-        isOpen: false,
-        isPseudoFocused: this.state.isFocused && !this.props.multi,
-        inputValue: ''
-      });
-    } else {
-      this.setState({
-        isOpen: false,
-        isPseudoFocused: this.state.isFocused && !this.props.multi,
-        inputValue: this.state.inputValue
-      });
-    }
+    const { multi, onCloseResetsInput } = this.props;
+    const { inputValue, isFocused } = this.state;
+    this.setState({
+      inputValue: onCloseResetsInput ? '' : inputValue,
+      isOpen: false,
+      isPseudoFocused: isFocused && !multi
+    });
     this.hasScrolledToOption = false;
   }
 
   handleMenuScroll (event) {
-    if (!this.props.onMenuScrollToBottom) return;
+    const { onMenuScrollToBottom } = this.props;
+    if (!onMenuScrollToBottom) return;
     const { target } = event;
     if (
       target.scrollHeight > target.offsetHeight
         && !(target.scrollHeight - target.offsetHeight - target.scrollTop)
     ) {
-      this.props.onMenuScrollToBottom();
+      onMenuScrollToBottom();
     }
   }
 
@@ -960,6 +968,19 @@ class Select extends Component {
     this.setState({ isOpen: false, inputValue: '' }, this.focus);
   }
 
+  clearValueByForce () {
+    /*
+    * We don't want to focus the element because another
+    * component (a different `this`) requested a reset!
+    * - From `clearValue()`:
+    *   ...
+    *   this.setValue(this.getResetValue());
+    *   this.setState({ isOpen: false, inputValue: '' }, this.focus);
+    */
+    this.setValue(this.getResetValue());
+    this.setState({ isOpen: false, inputValue: '' });
+  }
+
   /**
 	 * Retrieve a value from the given options and valueKey
 	 * @param	{String|Number|Array}	value	- the selected value(s)
@@ -1031,7 +1052,8 @@ class Select extends Component {
 
   selectValue (value) {
     const newValue = value;
-    //NOTE: update value in the callback to make sure the input value is empty so that there are no styling issues (Chrome had issue otherwise)
+    // NOTE: update value in the callback to make sure the input value
+    // is empty so that there are no styling issues (Chrome had issue otherwise)
     this.hasScrolledToOption = false;
     if (this.props.multi) {
       this.setState({ inputValue: '', focusedIndex: null }, () => {
@@ -1088,28 +1110,39 @@ class Select extends Component {
   }
 
   renderClear () {
-    if (
-      !this.props.clearable
-        || (!this.props.value || this.props.value === 0)
-        || this.props.multi && !this.props.value.length
-        || this.props.disabled
-        || this.props.isLoading
-    ) {
-      return;
-    }
-    const clear = this.props.clearRenderer();
+    const {
+      clearable,
+      clearAllText,
+      clearRenderer,
+      clearRendererFull,
+      clearValueText,
+      disabled,
+      isLoading,
+      multi,
+      value
+    } = this.props;
+
+    if (!clearable
+        || (!value || value === 0)
+        || multi && !value.length
+        || disabled
+        || isLoading
+    ) { return; }
+    // const clear = this.props.clearRenderer();
+
+    if (clearRendererFull) return clearRendererFull();
 
     return (
       <span
-        aria-label={this.props.multi ? this.props.clearAllText : this.props.clearValueText}
+        aria-label={multi ? clearAllText : clearValueText}
         className="Select-clear-zone"
         onMouseDown={this.clearValue}
         onTouchEnd={this.handleTouchEndClearValue}
         onTouchMove={this.handleTouchMove}
         onTouchStart={this.handleTouchStart}
-        title={this.props.multi ? this.props.clearAllText : this.props.clearValueText}
+        title={multi ? clearAllText : clearValueText}
       >
-        {clear}
+        {clearRenderer()}
       </span>
     );
   }
@@ -1188,27 +1221,34 @@ class Select extends Component {
       // eslint-disable-next-line no-unused-vars
       const { inputClassName, ...divProps } = this.props.inputProps;
       return (
-        <div
-          {...divProps}
-          role="combobox"
-          aria-expanded={isOpen}
-          aria-owns={isOpen ? this._instancePrefix + '-list' : this._instancePrefix + '-value'}
-          aria-activedescendant={
-            isOpen
-              ? this._instancePrefix + '-option-' + focusedOptionIndex
-              : this._instancePrefix + '-value'
-          }
-          className={className}
-          tabIndex={this.props.tabIndex || 0}
-          onBlur={this.handleInputBlur}
-          onFocus={this.handleInputFocus}
-          ref={ref => {
-              this.input = ref;
-              return;
-            }}
-          aria-readonly={'' + !!this.props.disabled}
-          style={{ border: 0, width: 1, display: 'inline-block' }}
-        />
+        <div className="Select-container">
+          <input
+            aria-activedescendant={
+              isOpen
+                ? this._instancePrefix + '-option-' + focusedOptionIndex
+                : this._instancePrefix + '-value'
+            }
+            aria-expanded={isOpen}
+            aria-owns={isOpen ? this._instancePrefix + '-list' : this._instancePrefix + '-value'}
+            aria-readonly={'' + !!this.props.disabled}
+            className={className}
+            disabled={this.props.disabled}
+            onBlur={this.handleInputBlur}
+            onFocus={this.handleInputFocus}
+            ref={ref => {
+                this.input = ref;
+                return;
+              }}
+            role="combobox"
+            tabIndex={this.props.tabIndex || 0}
+            {...divProps}
+          />
+          <span className="Select-bar" />
+          <label className="Select-label">
+            {placeholderText}
+            {this.renderRequired()}
+          </label>
+        </div>
       );
     }
 
@@ -1222,7 +1262,7 @@ class Select extends Component {
         <span className="Select-bar" />
         <label className="Select-label">
           {placeholderText}
-          {this.props.required ? <span className="Select-required" /> : null}
+          {this.renderRequired()}
         </label>
         {
           this.hasError()
@@ -1304,6 +1344,10 @@ class Select extends Component {
     );
   }
 
+  renderRequired () {
+    return this.props.required ? <span className="Select-required" /> : null;
+  }
+
   renderValue (valueArray, isOpen) {
     const renderLabel = this.props.valueRenderer || this.getOptionLabel;
     const ValueComponent = this.props.valueComponent;
@@ -1315,9 +1359,9 @@ class Select extends Component {
       return valueArray.map((value, i) => {
         return (
           <ValueComponent
+            disabled={this.props.disabled || value.clearableValue === false}
             id={this._instancePrefix + '-value-' + i}
             instancePrefix={this._instancePrefix}
-            disabled={this.props.disabled || value.clearableValue === false}
             key={`value-${i}-${value[this.props.valueKey]}`}
             onClick={onClick}
             onRemove={this.removeValue}
@@ -1332,8 +1376,8 @@ class Select extends Component {
       if (isOpen) onClick = null;
       return (
         <ValueComponent
-          id={this._instancePrefix + '-value-item'}
           disabled={this.props.disabled}
+          id={this._instancePrefix + '-value-item'}
           instancePrefix={this._instancePrefix}
           onClick={onClick}
           value={valueArray[0]}
@@ -1408,17 +1452,17 @@ class Select extends Component {
       >
         {this.renderHiddenField(valueArray)}
         <div
-          ref={ref => {
-              this.control = ref;
-              return;
-            }}
           className="Select-control"
-          style={this.props.style}
           onKeyDown={this.handleKeyDown}
           onMouseDown={this.handleMouseDown}
           onTouchEnd={this.handleTouchEnd}
           onTouchStart={this.handleTouchStart}
           onTouchMove={this.handleTouchMove}
+          ref={ref => {
+              this.control = ref;
+              return;
+            }}
+          style={this.props.style}
         >
           <span className="Select-multi-value-wrapper" id={this._instancePrefix + '-value'}>
             {this.renderValue(valueArray, isOpen)}
