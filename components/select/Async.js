@@ -40,6 +40,7 @@ export default class Async extends Component {
       PropTypes.string,
       PropTypes.node
     ]),
+    searchPromptTextHasInput: PropTypes.string,
     theme: PropTypes.any,
     value: PropTypes.any // initial field value
   };
@@ -52,7 +53,8 @@ export default class Async extends Component {
     ignoreCase: true,
     loadingPlaceholder: 'Loading...',
     options: [],
-    searchPromptText: 'Type to search'
+    searchPromptText: 'Type to search',
+    searchPromptTextHasInput: 'No results for '
   };
 
   constructor (props, context) {
@@ -175,17 +177,17 @@ export default class Async extends Component {
   }
 
   noResultsText () {
-    const { loadingPlaceholder, noResultsText, searchPromptText } = this.props;
+    const { loadingPlaceholder, noResultsText, searchPromptText, searchPromptTextHasInput } = this.props;
     const { isLoading } = this.state;
 
     const inputValue = this.inputValue();
 
-    if (isLoading) {
-      return loadingPlaceholder;
-    }
-    if (inputValue && noResultsText) {
-      return noResultsText;
-    }
+    if (isLoading) return loadingPlaceholder;
+
+    if (inputValue && noResultsText) return noResultsText;
+
+    if (searchPromptTextHasInput) return searchPromptTextHasInput;
+
     return searchPromptText;
   }
 
@@ -195,6 +197,7 @@ export default class Async extends Component {
 
     const props = {
       noResultsText: this.noResultsText(),
+      noResultsTextWithInput: this.noResultsText(),
       placeholder: isLoading ? loadingPlaceholder : placeholder,
       options: isLoading && loadingPlaceholder ? [] : options,
       ref: ref => { this.select = ref; return; },

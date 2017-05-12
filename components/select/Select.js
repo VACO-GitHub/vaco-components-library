@@ -124,6 +124,8 @@ class Select extends Component {
     // generates a hidden <input /> tag with this field name for html forms
     noResultsText: PropTypes.oneOfType([ PropTypes.string, PropTypes.node ]),
     // placeholder displayed when there are no matching search results
+    noResultsTextWithInput: PropTypes.oneOfType([ PropTypes.string, PropTypes.node ]),
+    // placeholder displayed with the input value when there are no matching search results
     onBlur: PropTypes.func,
     // onBlur handler: function (event) {}
     onBlurResetsInput: PropTypes.bool,
@@ -247,6 +249,7 @@ class Select extends Component {
     menuRenderer: defaultMenuRenderer,
     multi: false,
     noResultsText: 'No results found',
+    noResultsTextWithInput: 'No results found for...',
     onBlurResetsInput: true,
     onCloseResetsInput: true,
     openAfterFocus: false,
@@ -1304,6 +1307,13 @@ class Select extends Component {
         valueKey: this.props.valueKey,
         onOptionRef: this.onOptionRef
       });
+    } else if (this.props.noResultsTextWithInput) {
+      const uppercaseInput = this.state.inputValue;
+      return (
+        <div className="Select-noresults">
+          {`${this.props.noResultsText} ${uppercaseInput.toUpperCase()}`}
+        </div>
+      );
     } else if (this.props.noResultsText) {
       return (
         <div className="Select-noresults">
